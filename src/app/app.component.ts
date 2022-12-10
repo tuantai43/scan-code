@@ -1,64 +1,37 @@
-import { Component, OnDestroy } from '@angular/core';
-import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Html5QrcodeScanner } from 'html5-qrcode';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnDestroy {
-  qrCodeString = 'This is a secret qr code message';
-  scannedResult: any;
-  content_visibility = '';
-
-  async checkPermission() {
-    try {
-      // check or request permission
-      const status = await BarcodeScanner.checkPermission({ force: true });
-      if (status.granted) {
-        // the user granted permission
-        return true;
-      }
-      return false;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
+export class AppComponent implements OnInit, OnDestroy {
+  scannedResult: any = '';
+  ngOnInit(): void {
+    const html5QrcodeScanner = new Html5QrcodeScanner(
+      'reader',
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      /* verbose= */ false
+    );
+    html5QrcodeScanner.render(
+      this.onScanSuccess.bind(this),
+      this.onScanFailure
+    );
+  }
+  onScanSuccess(decodedText: any, decodedResult: any) {
+    console.log(decodedText);
+    this.scannedResult = decodedText;
+    // handle the scanned code as you like, for example:
+    // this.scannedResult = decodedResult;
+    // console.log(`Code matched = ${decodedText}`, decodedResult);
   }
 
-  async startScan() {
-    try {
-      const permission = await this.checkPermission();
-      console.log('permission', permission);
-      if (!permission) {
-        return;
-      }
-      await BarcodeScanner.hideBackground();
-      document.querySelector('body')?.classList.add('scanner-active');
-      this.content_visibility = 'hidden';
-      const result = await BarcodeScanner.startScan();
-      console.log(result);
-      BarcodeScanner.showBackground();
-      document.querySelector('body')?.classList.remove('scanner-active');
-      this.content_visibility = '';
-      if (result?.hasContent) {
-        this.scannedResult = result.content;
-        console.log(this.scannedResult);
-      }
-    } catch (e) {
-      console.log(e);
-      this.stopScan();
-    }
+  onScanFailure(error: any) {
+    // handle scan failure, usually better to ignore and keep scanning.
+    // for example:
+    // console.warn(`Code scan error = ${error}`);
   }
 
-  stopScan() {
-    BarcodeScanner.showBackground();
-    BarcodeScanner.stopScan();
-    document.querySelector('body')?.classList.remove('scanner-active');
-    this.content_visibility = '';
-  }
-
-  ngOnDestroy(): void {
-    this.stopScan();
-  }
+  ngOnDestroy(): void {}
 }

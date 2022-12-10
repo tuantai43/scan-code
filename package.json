@@ -25,8 +25,12 @@
     "@capacitor/ios": "4.6.1",
     "@capacitor/keyboard": "4.1.0",
     "@capacitor/status-bar": "4.1.1",
+    "@ericblade/quagga2": "^1.7.7",
     "@ionic/angular": "^6.4.0",
+    "@zxing/ngx-scanner": "^3.8.0",
     "angularx-qrcode": "^14.0.0",
+    "html5-qrcode": "^2.3.4",
+    "ngx-barcode-scanner": "^14.0.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
