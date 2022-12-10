@@ -29,6 +29,7 @@ export class AppComponent implements OnDestroy {
   async startScan() {
     try {
       const permission = await this.checkPermission();
+      console.log('permission', permission);
       if (!permission) {
         return;
       }

@@ -1,6 +1,7 @@
 {
   "name": "scan-code",
-  "integrations": {},
-  "projects": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }
